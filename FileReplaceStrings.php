@@ -8,13 +8,10 @@
 <table height="100%" width="100%" style="height:100%; width:100%;"><tr><td align="center" valign="middle">
 
 <?
-// If there's a file, check for an error.
-if ($_FILES["file"]["error"] > 0) { echo "Error: " . $_FILES["file"]["error"] . "<br>"; }
 
-// If there's a file and no error, then process it.
-else if(isset($_FILES["file"]))
-{
-		
+// Loop through uploaded files and replace.
+for($i=0; $i<count($_FILES['upload']['name']); $i++) {
+			
 	// Replacement list for text and html.
 	$replace = array(
 		'–' => '-',
@@ -24,16 +21,14 @@ else if(isset($_FILES["file"]))
 		"’" => "'",
 		'–' => '-',	
 		);
-	
 	// List for text only.
-	if ( strpos($_FILES['file']['name'], '.txt') )
+	if ( strpos($_FILES['upload']['name'][$i], '.txt') )
 		{
 			$replace['®'] = '(R)';
 			$replace['©'] = '(C)';
 	}
-	
 	// List for html only.
-	else if ( strpos($_FILES['file']['name'], '.html') )
+	else if ( strpos($_FILES['upload']['name'][$i], '.html') )
 		{
 			$replace['®'] = '&reg;';
 			$replace['©'] = '&copy;';
@@ -44,19 +39,18 @@ else if(isset($_FILES["file"]))
 	
 	
 	// Make replacements and save file.		
-	$file_contents = file_get_contents($_FILES['file']['tmp_name']);
+	$file_contents = file_get_contents($_FILES['upload']['tmp_name'][$i]);
 	$original = $file_contents;
 	foreach ($replace as $old => $new) { $file_contents = str_replace($old,$new,$file_contents); }
-	file_put_contents($_FILES["file"]["name"],$file_contents);
+	file_put_contents($_FILES["upload"]["name"][$i],$file_contents);
 
 	// Create link to updated file.
 	echo '<table height="120" width="400" bgcolor="#FFFFFF"><tr><td align="center" valign="middle">';
-	echo "Processed: <a href='". $_FILES["file"]["name"] ."'>". $_FILES["file"]["name"] ."</a>";
+	echo "Processed: <a href='". $_FILES["upload"]["name"][$i] ."'>". $_FILES["upload"]["name"][$i] ."</a>";
 	if ($original != $file_contents) { echo "<p style='color:#900;'>Updated</p>"; }
 	else { echo "<p style='color:#999;'>No Changes Made</p>"; }
 	echo "</td></tr></table><br />";	
 }
-
 
 // Form for uploading file.
 ?>
@@ -67,7 +61,7 @@ else if(isset($_FILES["file"]))
 <tr><th colspan="2">Please Upload Text or HTML</th></tr>
 <tr>
   
-    <td align="center" width="200"><input type="file" name="file" id="file"></td>
+    <td align="center" width="200"><input type="file" name="upload[]"  multiple="multiple"></td>
 </tr>
 <tr><td align="center" colspan="2"><input type="submit" name="submit" value="Upload"></td></tr>
 </table>
