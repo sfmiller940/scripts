@@ -3,14 +3,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>File Processing Station</title>
+<style>
+div.box{
+	width:400px;
+	min-height:100px;
+	background-color:#ffffff;
+	margin-top: 30px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align:center;
+}
+</style>
 </head>
 <body background="giphy.gif" bgcolor="#000000" style="background-size:cover; height:100%;">
-<table height="100%" width="100%" style="height:100%; width:100%;"><tr><td align="center" valign="middle">
-
+<div style="width:400px; margin-left:auto; margin-right:auto;">
 <?
 
-// Loop through uploaded files and replace.
 for($i=0; $i<count($_FILES['upload']['name']); $i++) {
+	
 			
 	// Replacement list for text and html.
 	$replace = array(
@@ -45,31 +55,27 @@ for($i=0; $i<count($_FILES['upload']['name']); $i++) {
 	file_put_contents($_FILES["upload"]["name"][$i],$file_contents);
 
 	// Create link to updated file.
-	echo '<table height="120" width="400" bgcolor="#FFFFFF"><tr><td align="center" valign="middle">';
-	echo "Processed: <a href='". $_FILES["upload"]["name"][$i] ."'>". $_FILES["upload"]["name"][$i] ."</a>";
+	echo '<div class="box">';
+	echo "<p align='center'>Processed: <a href='". $_FILES["upload"]["name"][$i] ."'>". $_FILES["upload"]["name"][$i] ."</a></p>";
 	if ($original != $file_contents) { echo "<p style='color:#900;'>Updated</p>"; }
 	else { echo "<p style='color:#999;'>No Changes Made</p>"; }
-	echo "</td></tr></table><br />";	
+	echo "</div>";	
 }
 
 // Form for uploading file.
 ?>
+
+<div class="box">
+<p align="center">
 <form action="index.php" method="post" enctype="multipart/form-data">
-<table height="120" width="400" bgcolor="#FFFFFF"><tr><td align="center" valign="middle">
-
-<table cellpadding="15">
-<tr><th colspan="2">Please Upload Text or HTML</th></tr>
-<tr>
-  
-    <td align="center" width="200"><input type="file" name="upload[]"  multiple="multiple"></td>
-</tr>
-<tr><td align="center" colspan="2"><input type="submit" name="submit" value="Upload"></td></tr>
-</table>
+Please Upload Text or HTML<br /><br />
+<input type="file" name="upload[]"  multiple="multiple"><br><br />
+<input type="submit" name="submit" value="Upload">
 </form>
+</p>
+</div>
 
 
-</td></tr></table>
-
-</td></tr></table>
+</div>
 </body>
 </html>
